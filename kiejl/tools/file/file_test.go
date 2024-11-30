@@ -21,7 +21,7 @@ func TestCreate(t *testing.T) {
 
 	// error - already exists
 	err = Create(dest, "Created.\n", 0666)
-	assert.ErrorContains(t, err, "already exists")
+	test.AssertErr(t, err, "cannot create file %q - already exists")
 }
 
 func TestDelete(t *testing.T) {
@@ -37,7 +37,7 @@ func TestDelete(t *testing.T) {
 
 	// error - does not exist
 	err = Delete(orig)
-	assert.ErrorContains(t, err, "does not exist")
+	test.AssertErr(t, err, "cannot delete file %q - does not exist")
 }
 
 func TestExists(t *testing.T) {
@@ -65,7 +65,7 @@ func TestRead(t *testing.T) {
 	// error - does not exist
 	body, err = Read("/nope.extn")
 	assert.Empty(t, body)
-	assert.ErrorContains(t, err, "does not exist")
+	test.AssertErr(t, err, "cannot read file %q - does not exist")
 }
 
 func TestUpdate(t *testing.T) {
@@ -79,5 +79,5 @@ func TestUpdate(t *testing.T) {
 
 	// error - does not exist
 	err = Update("/nope.extn", "Updated.\n", 0666)
-	assert.ErrorContains(t, err, "does not exist")
+	test.AssertErr(t, err, "cannot update file %q - does not exist")
 }

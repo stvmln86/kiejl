@@ -4,10 +4,18 @@ package test
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+// ErrorForms is a map of error message placeholders to regular expressions.
+var ErrorForms = map[string]string{
+	"%q": `".*"`,
+	"%s": `.*`,
+	"%w": `.*`,
+}
 
 // MockFiles is a map of mock note files.
 var MockFiles = map[string]string{
@@ -24,6 +32,17 @@ func AssertDire(t *testing.T, dire string, pairs map[string]string) {
 		assert.Equal(t, body, string(bytes))
 		assert.NoError(t, err)
 	}
+}
+
+// AssertErr asserts an error's message matches a string template.
+func AssertErr(t *testing.T, err error, text string) {
+	for hold, regx := range ErrorForms {
+		if strings.Contains(text, hold) {
+			text = strings.Replace(text, hold, regx, -1)
+		}
+	}
+
+	assert.Regexp(t, text, err.Error())
 }
 
 // AssertFile asserts a file's body is equal to a string.
