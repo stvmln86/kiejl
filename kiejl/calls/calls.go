@@ -29,7 +29,7 @@ type NewCallFunc func(*book.Book) (Call, error)
 
 // Calls is a map of all defined Call implementations.
 var Calls = map[string]NewCallFunc{
-	// "list": NewList,
+	"list": NewList,
 }
 
 // Run parses an argument slice and executes the matching Call with parsed arguments.

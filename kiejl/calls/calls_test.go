@@ -36,10 +36,27 @@ func (c *MockCall) Run(w io.Writer, pairs map[string]string) error {
 	return nil
 }
 
+func assertCall(t *testing.T, cfun NewCallFunc) {
+	call, err := cfun(nil)
+	assert.NotNil(t, call)
+	assert.NotEmpty(t, call.Name())
+	assert.NotEmpty(t, call.Help())
+	assert.NotNil(t, call.Name())
+	assert.NoError(t, err)
+}
+
+func runCall(t *testing.T, argus ...string) (string, error) {
+	w := bytes.NewBuffer(nil)
+	dire := test.TempDire(t)
+	book := book.New(dire, ".extn", 0666)
+	err := Run(w, book, argus)
+	return w.String(), err
+}
+
 func TestRun(t *testing.T) {
 	// setup
 	w := bytes.NewBuffer(nil)
-	Calls = map[string]NewCallFunc{"mock": NewMock}
+	Calls["mock"] = NewMock
 
 	// success
 	err := Run(w, nil, []string{"mock", "argument"})
