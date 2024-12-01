@@ -3,8 +3,24 @@ package clui
 
 import (
 	"fmt"
+	"os"
 	"strings"
 )
+
+// GetEnv returns an existing environment variable by name.
+func GetEnv(name string) (string, error) {
+	evar, ok := os.LookupEnv(name)
+	evar = strings.TrimSpace(evar)
+
+	switch {
+	case !ok:
+		return "", fmt.Errorf("environment variable %q is not set", name)
+	case evar == "":
+		return "", fmt.Errorf("environment variable %q is blank", name)
+	default:
+		return evar, nil
+	}
+}
 
 // Parse returns an argument map from a parameter slice and argument slice. Parameters
 // containing ":" are split and use the right text as a default value.

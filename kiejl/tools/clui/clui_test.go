@@ -1,11 +1,33 @@
 package clui
 
 import (
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stvmln86/kiejl/kiejl/tools/test"
 )
+
+func TestGetEnv(t *testing.T) {
+	// setup
+	os.Setenv("NAME", "Value.\n")
+	os.Setenv("BLANK", "\n")
+
+	// success
+	evar, err := GetEnv("NAME")
+	assert.Equal(t, "Value.", evar)
+	assert.NoError(t, err)
+
+	// error - is not set
+	evar, err = GetEnv("NOPE")
+	assert.Empty(t, evar)
+	test.AssertErr(t, err, `environment variable "NOPE" is not set`)
+
+	// error - is blank
+	evar, err = GetEnv("BLANK")
+	assert.Empty(t, evar)
+	test.AssertErr(t, err, `environment variable "BLANK" is blank`)
+}
 
 func TestParse(t *testing.T) {
 	// success - real value
