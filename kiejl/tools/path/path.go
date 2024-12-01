@@ -3,6 +3,7 @@ package path
 
 import (
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -25,6 +26,7 @@ func Extn(orig string) string {
 func Glob(dire, extn string) []string {
 	glob := filepath.Join(dire, "*"+extn)
 	origs, _ := filepath.Glob(glob)
+	sort.Strings(origs)
 	return origs
 }
 
